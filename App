@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Báo Cáo - Công Ty</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 20px 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="45" ry="25" fill="none" stroke="%23374151" stroke-width="6"/><ellipse cx="50" cy="50" rx="45" ry="25" fill="none" stroke="%2322c55e" stroke-width="4" stroke-dasharray="70 30" transform="rotate(45 50 50)"/><circle cx="70" cy="35" r="8" fill="%2322c55e"/></svg>') center/contain no-repeat;
+        }
+
+        .company-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .timestamp {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            font-size: 16px;
+            color: #6b7280;
+        }
+
+        /* Reports Grid */
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .report-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .report-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #22c55e, #16a34a);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            border-color: #22c55e;
+        }
+
+        .report-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .report-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .report-card:hover .report-icon {
+            background: #dcfce7;
+            transform: scale(1.1);
+        }
+
+        .report-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+
+        .report-description {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .report-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .report-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #f9fafb;
+            color: #374151;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .report-link:hover {
+            background: #22c55e;
+            color: white;
+            border-color: #22c55e;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1f2937;
+            color: #9ca3af;
+            text-align: center;
+            padding: 24px 0;
+            margin-top: 60px;
+        }
+
+        .footer p {
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .page-title h1 {
+                font-size: 24px;
+            }
+
+            .reports-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .report-card {
+                padding: 24px 20px;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 50%;
+            border-top-color: #22c55e;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo"></div>
+                    <div>
+                        <h1 class="company-title">Công Ty ABC</h1>
+                    </div>
+                </div>
+                <div class="timestamp" id="currentTime"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-title">
+                <h1>Dashboard Báo Cáo</h1>
+                <p>Truy cập nhanh các báo cáo quan trọng của công ty</p>
+            </div>
+
+            <div class="reports-grid">
+                <!-- Báo cáo Doanh số -->
+                <div class="report-card" onclick="toggleLinks('sales')">
+                    <div class="report-icon">📊</div>
+                    <h3 class="report-title">Báo Cáo Doanh Số</h3>
+                    <p class="report-description">Theo dõi doanh thu, KPI bán hàng và phân tích thị trường</p>
+                    <div class="report-links" id="sales-links">
+                        <a href="#" class="report-link" onclick="openReport(event, 'Báo cáo doanh thu tháng')">📈 Doanh thu tháng</a>
+                        <a href="#" class="report-link" onclick="openReport(event, 'Báo cáo KPI bán hàng')">🎯 KPI bán hàng</a>
+                        <a href="#" class="report-link" onclick="openReport(event, 'Phân tích khách hàng')">👥 Phân tích khách hàng</a>
+                        <a href="#" class="report-link" onclick="openReport(event, 'Báo cáo sản phẩm')">📦 Báo cáo sản phẩm</a>
+                    </div>
+                </div>
+
+                <!-- Báo cáo Tiến độ -->
+                <div class="report-card" onclick="toggleLinks('progress')">
+                    <div class="report-icon">⏱️</div>
+                    <h3 class="report-title">Báo Cáo Tiến Độ</h3>
+                    <p class="report-description">Theo dõi tiến độ dự án, timeline và milestone</p>
+                    <div class="report-links" id="progress-links">
+                        <a href="#" class="report-link" onclick="openReport(event, 'Tiến độ dự án chính')">🚀 Dự án chính</a>
+                        <a href="#" class="report-link" onclick="openReport(event, 'Timeline milestone')">📅 Timeline & Milestone</a>
+                        <a href="#" class="report-link" onclick="openReport(event, 'Báo cáo tài nguyên')">⚡ Tài nguyên & Nhân lực</a>
+                        <a href="#" class="report-link" onclick="openReport(event, 'Đánh giá rủi ro')">⚠️ Đánh giá rủi ro</a>
+                    </div>
+                </div>
+
+                <!-- Báo cáo Kỹ thuật -->
+                <div class="report-card" onclick="toggleLinks('technical')">
+                    <div class="report-icon">⚙️</div>
+                    <h3 class="report-title">Báo Cáo Kỹ Thuật</h3>
+                    <p class="report-description">Tài liệu kỹ thuật, performance metrics và system health</p>
+                    <div class="report-links" id="technical-links">
+                        <a href="#" class="report-link" onclick="openReport(event, 'Performance hệ thống')">📡 Performance hệ thống</a>
+                        <a href="#" class="report-link" onclick="openReport(event, 'Tài liệu kỹ thuật')">📋 Tài liệu kỹ thuật</a>
+                        <a href="#" class="report-link" onclick="openReport(event, 'Backup & Security')">🔒 Backup & Security</a>
+                        <a href="#" class="report-link" onclick="openReport(event, 'System logs')">📝 System Logs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Công Ty ABC. Dashboard được tạo để hỗ trợ nhân viên truy cập báo cáo nhanh chóng.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            document.getElementById('currentTime').textContent = now.toLocaleDateString('vi-VN', options);
+        }
+
+        // Toggle report links visibility
+        function toggleLinks(reportType) {
+            const links = document.getElementById(reportType + '-links');
+            const allLinks = document.querySelectorAll('.report-links');
+            
+            // Hide all other links
+            allLinks.forEach(link => {
+                if (link.id !== reportType + '-links') {
+                    link.style.display = 'none';
+                }
+            });
+            
+            // Toggle current links
+            if (links.style.display === 'none' || !links.style.display) {
+                links.style.display = 'flex';
+            } else {
+                links.style.display = 'none';
+            }
+        }
+
+        // Handle report link clicks
+        function openReport(event, reportName) {
+            event.stopPropagation();
+            
+            // Show loading state
+            const link = event.target;
+            const originalText = link.textContent;
+            link.innerHTML = '<span class="loading"></span> Đang tải...';
+            
+            // Simulate loading (replace with actual URL)
+            setTimeout(() => {
+                link.textContent = originalText;
+                alert(`Đang mở: ${reportName}\n\nLưu ý: Thay thế '#' bằng URL báo cáo thực tế của bạn`);
+                
+                // In thực tế, bạn sẽ sử dụng:
+                // window.open('URL_BAO_CAO_THUC_TE', '_blank');
+            }, 1000);
+        }
+
+        // Initialize
+        updateTime();
+        setInterval(updateTime, 60000); // Update every minute
+
+        // Hide all links initially
+        document.querySelectorAll('.report-links').forEach(links => {
+            links.style.display = 'none';
+        });
+
+        // Add smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+    </script>
+</body>
+</html>
+README.md
